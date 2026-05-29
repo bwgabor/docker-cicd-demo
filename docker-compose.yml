@@ -1,0 +1,88 @@
+# File: docker-compose.yml
+# Purpose: Base stack for local CI/CD platform
+# Save to: docker-cicd-demo/docker-compose.yml
+# Note: for local development/demo environment only
+
+services:
+  gitea:
+    image: gitea/gitea:1.24
+    container_name: gitea
+    restart: unless-stopped
+    ports:
+      - "3000:3000"   # Gitea web UI
+      - "222:22"      # Gitea SSH
+    volumes:
+      - gitea_data:/data
+    networks:
+      - cicd_net
+
+  jenkins:
+    build:
+      context: ./docker-files/jenkins
+      dockerfile: Dockerfile
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # Jenkins UI
+      - "50000:50000" # Jenkins inbound agents
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - cicd_net
+
+  registry:
+    image: registry:2
+    container_name: registry
+    restart: unless-stopped
+    ports:
+      - "5001:5000"   # Host 5001 -> container registry 5000
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+    volumes:
+      - registry_data:/var/lib/registry
+      - ./config/registry:/auth
+    networks:
+      - cicd_net
+
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"       # HTTP
+      - "81:81"       # NPM admin UI
+      - "443:443"     # HTTPS
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - cicd_net
+
+  portainer:
+    image: portainer/portainer-ce:lts
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - cicd_net
+
+volumes:
+  gitea_data:
+  jenkins_data:
+  registry_data:
+  npm_data:
+  npm_letsencrypt:
+  portainer_data:
+
+networks:
+  cicd_net:
+    driver: bridge
