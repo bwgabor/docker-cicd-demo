@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+
+config/registry/htpasswd
+
+.vagrant/
+*.log
+.DS_Store
+.idea/
+.vscode/
