@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        REGISTRY = '127.0.0.1:5001'
+        IMAGE_NAME = 'nginx-static-site'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'http://gitea:3000/gitadmin/nginx-static-site.git'
+            }
+        }
+
+        stage('Build image') {
+            steps {
+                sh """
+                  docker build \
+                    -t ${REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER} \
+                    -t ${REGISTRY}/${IMAGE_NAME}:latest \
+                    .
+                """
+            }
+        }
+
+        stage('Push image') {
+            steps {
+                sh """
+                  docker push ${REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}
+                  docker push ${REGISTRY}/${IMAGE_NAME}:latest
+                """
+            }
+        }
+
+        stage('Deploy container') {
+            steps {
+                sh """
+                  docker rm -f nginx-static-site || true
+
+                  docker run -d \
+                    --name nginx-static-site \
+                    -p 8880:80 \
+                    ${REGISTRY}/${IMAGE_NAME}:latest
+                """
+            }
+        }
+    }
+}
