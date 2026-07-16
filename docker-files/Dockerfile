@@ -7,7 +7,7 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Alap csomagok és Docker repository kulcs
+# Basic packages and Docker repository key
 RUN apt-get update && apt-get install -y \
   ca-certificates \
   curl \
@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Docker socket használathoz szükséges csoport előkészítés
-RUN groupadd -g 986 docker || true \
-  && usermod -aG docker jenkins
+#RUN groupadd -g 986 docker || true \
+#  && usermod -aG docker jenkins
 
 # Setup entrypoint to align docker group GID at container startup
 COPY entrypoint.sh /entrypoint.sh
