@@ -59,3 +59,24 @@ if ! grep -q "registry.local" /etc/hosts; then
   echo "[provision] adding registry.local to /etc/hosts..."
   echo "127.0.0.1 registry.local" >> /etc/hosts
 fi
+
+# Build custom Jenkins image (skip if already exists)
+if ! docker image inspect custom-jenkins &>/dev/null; then
+  echo "[provision] Building custom Jenkins image..."
+  docker build -t custom-jenkins /vagrant/docker-files/jenkins
+else
+  echo "[provision] custom-jenkins image already exists, skipping."
+fi
+
+# Start the platform stack (skip if already running)
+if [ -z "$(docker compose -f /vagrant/docker-compose.yml ps -q)" ]; then
+  echo "[provision] Starting Docker Compose stack..."
+  docker compose -f /vagrant/docker-compose.yml up -d
+else
+  echo "[provision] Stack already running, skipping."
+fi
+
+# Final status check
+echo ""
+echo "[provision] Stack status:"
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
