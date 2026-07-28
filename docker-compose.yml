@@ -18,6 +18,7 @@ services:
       - GITEA__server__DOMAIN=${GITEA_DOMAIN}
       - GITEA__service__DISABLE_REGISTRATION=false
       - GITEA__database__DB_TYPE=sqlite3
+      - GITEA__webhook__ALLOWED_HOST_LIST=jenkins
     volumes:
       - gitea_data:/data
     networks:
