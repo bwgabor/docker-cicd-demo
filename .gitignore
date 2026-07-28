@@ -9,3 +9,4 @@ config/registry/htpasswd
 .DS_Store
 .idea/
 .vscode/
+gitea.token.txt
