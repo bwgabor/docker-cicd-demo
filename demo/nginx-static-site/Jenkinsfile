@@ -3,13 +3,16 @@ pipeline {
 
     environment {
         REGISTRY = '127.0.0.1:5001'
-        IMAGE_NAME = 'nginx-static-site'
+        IMAGE_NAME = 'demo'
+        CONTAINER_NAME = 'demo'
+        NETWORK_NAME = 'docker-cicd-demo_cicd_net'
+        REGISTRY_CRED = "registry-creds"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'http://gitea:3000/gitadmin/nginx-static-site.git'
+                git branch: 'main', url: 'http://gitea:3000/giteaadmin/nginx-static-site.git'
             }
         }
 
@@ -26,20 +29,28 @@ pipeline {
 
         stage('Push image') {
             steps {
-                sh """
-                  docker push ${REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}
-                  docker push ${REGISTRY}/${IMAGE_NAME}:latest
-                """
+                withCredentials([usernamePassword(
+                    credentialsId: env.REGISTRY_CRED,
+                    usernameVariable: 'REG_USER',
+                    passwordVariable: 'REG_PASS'
+                )]) {
+                    sh """
+                        echo \$REG_PASS | docker login ${REGISTRY} -u \$REG_USER --password-stdin
+                        docker push ${REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}
+                        docker push ${REGISTRY}/${IMAGE_NAME}:latest
+                    """
+                }
             }
         }
 
         stage('Deploy container') {
             steps {
                 sh """
-                  docker rm -f nginx-static-site || true
+                  docker rm -f ${CONTAINER_NAME} || true
 
                   docker run -d \
-                    --name nginx-static-site \
+                    --name ${CONTAINER_NAME} \
+                    --network ${NETWORK_NAME} \
                     -p 8880:80 \
                     ${REGISTRY}/${IMAGE_NAME}:latest
                 """
