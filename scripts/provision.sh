@@ -80,3 +80,15 @@ fi
 echo ""
 echo "[provision] Stack status:"
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Set up demo app directory in vagrant home
+if [ ! -d "/home/vagrant/nginx-static-site" ]; then
+  echo "[provision] Setting up demo app files..."
+  mkdir -p /home/vagrant/nginx-static-site
+  cp /vagrant/demo/nginx-static-site/Dockerfile /home/vagrant/nginx-static-site/
+  cp /vagrant/demo/nginx-static-site/Jenkinsfile /home/vagrant/nginx-static-site/
+  cp /vagrant/demo/nginx-static-site/index.html /home/vagrant/nginx-static-site/
+  chown -R vagrant:vagrant /home/vagrant/nginx-static-site
+else
+  echo "[provision] Demo app directory already exists, skipping."
+fi
