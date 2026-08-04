@@ -41,7 +41,11 @@ if [ ! -f /etc/docker/daemon.json ]; then
   echo "[provision] Writing daemon.json..."
   cat <<'EOF' > /etc/docker/daemon.json
 {
-  "insecure-registries": ["registry.local"]
+  "insecure-registries": [
+    "registry.local"
+    "registry:5001",
+    "localhost:5001"
+  ]
 }
 EOF
   systemctl restart docker
