@@ -59,6 +59,11 @@ The platform uses local host names instead of direct IP addresses. Add the follo
 192.168.56.10 app.local
 ```
 
+> [!NOTE]
+> The current Registry workflow does not require `registry.local` to resolve on the host machine. Registry validation runs inside the VM through `localhost:5001`.
+>
+> Add `registry.local` to the host operating system hosts file only when you want to use the host machine Docker CLI with `registry.local:5001`.
+
 On Windows, open the following file in a text editor with Administrator privileges:
 
 ```cmd
@@ -178,7 +183,6 @@ Open **Hosts** > **Proxy Hosts** and select **Add Proxy Host**. Create the follo
 | `npm.local`       | `http` | `nginx-proxy-manager` |           81 | Enabled            | Enabled               |
 | `gitea.local`     | `http` | `gitea`               |         3000 | Enabled            | Enabled               |
 | `jenkins.local`   | `http` | `jenkins`             |         8080 | Enabled            | Enabled               |
-| `registry.local`  | `http` | `registry`            |         5000 | Enabled            | Enabled               |
 | `app.local`       | `http` | `app`                 |           80 | Enabled            | Enabled               |
 | `portainer.local` | `http` | `portainer`           |         9000 | Enabled            | Enabled               |
 
@@ -218,6 +222,7 @@ Open the following URLs in a browser:
 http://gitea.local
 http://jenkins.local
 http://portainer.local
+http://npm.local
 ```
 
 Each URL should load the corresponding platform user interface through Nginx Proxy Manager.
@@ -489,6 +494,7 @@ First, verify that the Registry container is running and that the Docker daemon 
 
 ```bash
 vagrant ssh
+cd /vagrant
 docker compose ps registry
 docker info | sed -n '/Insecure Registries:/,/Live Restore Enabled:/p'
 ```

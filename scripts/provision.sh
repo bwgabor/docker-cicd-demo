@@ -42,7 +42,7 @@ if [ ! -f /etc/docker/daemon.json ]; then
   cat <<'EOF' > /etc/docker/daemon.json
 {
   "insecure-registries": [
-    "registry.local"
+    "registry.local",
     "registry:5001",
     "localhost:5001"
   ]
