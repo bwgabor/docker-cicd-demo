@@ -61,7 +61,7 @@ docker compose version
 # VM /etc/hosts append (registry.local)
 if ! grep -q "registry.local" /etc/hosts; then
   echo "[provision] adding registry.local to /etc/hosts..."
-  echo "127.0.0.1 registry.local" >> /etc/hosts
+  echo "127.0.0.1 registry.local gitea.local" >> /etc/hosts
 fi
 
 # Build custom Jenkins image (skip if already exists)
