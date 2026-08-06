@@ -1,0 +1,168 @@
+Generic Cause
+Obtained Jenkinsfile from git http://gitea:3000/giteaadmin/nginx-static-site.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/demo-app-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+using credential gitea-token
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/demo-app-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url http://gitea:3000/giteaadmin/nginx-static-site.git # timeout=10
+Fetching upstream changes from http://gitea:3000/giteaadmin/nginx-static-site.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials Gitea hozzáférés
+ > git fetch --tags --force --progress -- http://gitea:3000/giteaadmin/nginx-static-site.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision e5f81bf5b96ab3087d0abcd658038f54641784d3 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e5f81bf5b96ab3087d0abcd658038f54641784d3 # timeout=10
+Commit message: "test: update demo page"
+ > git rev-list --no-walk 7e7315da9a6c1b4ae00baf9dc90cc016c9a5723b # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/demo-app-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url http://gitea:3000/giteaadmin/nginx-static-site.git # timeout=10
+Fetching upstream changes from http://gitea:3000/giteaadmin/nginx-static-site.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- http://gitea:3000/giteaadmin/nginx-static-site.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision e5f81bf5b96ab3087d0abcd658038f54641784d3 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e5f81bf5b96ab3087d0abcd658038f54641784d3 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main e5f81bf5b96ab3087d0abcd658038f54641784d3 # timeout=10
+Commit message: "test: update demo page"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build image)
+[Pipeline] sh
++ docker build -t 127.0.0.1:5001/demo:11 -t 127.0.0.1:5001/demo:latest .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 104B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 1.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 306B 0.0s done
+#4 DONE 0.1s
+
+#5 [1/2] FROM docker.io/library/nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752
+#5 resolve docker.io/library/nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752 0.2s done
+#5 DONE 0.2s
+
+#5 [1/2] FROM docker.io/library/nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752
+#5 CACHED
+
+#6 [2/2] COPY index.html /usr/share/nginx/html/index.html
+#6 DONE 0.2s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 0.5s done
+#7 exporting manifest sha256:06822c21ab7d1aa42814eff65b3946766254b07691466c5b65e33d0ec8191ca3 0.1s done
+#7 exporting config sha256:1b494a0a0d227b7e4d4d87eba6619eab9ae3c124f98b3ca3059246b0e381419e
+#7 exporting config sha256:1b494a0a0d227b7e4d4d87eba6619eab9ae3c124f98b3ca3059246b0e381419e 0.1s done
+#7 exporting attestation manifest sha256:5ade15a0098a0ebf5bbbb8a41eb7bb22d3af495e533aede36ad735282182ee40
+#7 exporting attestation manifest sha256:5ade15a0098a0ebf5bbbb8a41eb7bb22d3af495e533aede36ad735282182ee40 0.2s done
+#7 exporting manifest list sha256:e54557bf57c760e93fac8574bbcbbc5d2483b51e87d3817d13cdb66085b4944b
+#7 exporting manifest list sha256:e54557bf57c760e93fac8574bbcbbc5d2483b51e87d3817d13cdb66085b4944b 0.1s done
+#7 naming to 127.0.0.1:5001/demo:11
+#7 naming to 127.0.0.1:5001/demo:11 0.0s done
+#7 unpacking to 127.0.0.1:5001/demo:11 0.1s done
+#7 naming to 127.0.0.1:5001/demo:latest 0.0s done
+#7 unpacking to 127.0.0.1:5001/demo:latest 0.0s done
+#7 DONE 1.2s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push image)
+[Pipeline] withCredentials
+Masking supported pattern matches of $REG_PASS
+[Pipeline] {
+[Pipeline] sh
++ echo ****
++ docker login 127.0.0.1:5001 -u admin --password-stdin
+Login Succeeded
++ docker push 127.0.0.1:5001/demo:11
+The push refers to repository [127.0.0.1:5001/demo]
+1223f016b4e4: Waiting
+46f977ee452f: Waiting
+7955ab648dd4: Waiting
+0601614c3ac9: Waiting
+3cd534fe98c6: Waiting
+62bec68d7c31: Waiting
+d0008c891db4: Waiting
+390dc935348d: Layer already exists
+46519e7231d2: Waiting
+55afa1ecc21d: Waiting
+55afa1ecc21d: Layer already exists
+1223f016b4e4: Layer already exists
+46f977ee452f: Layer already exists
+3cd534fe98c6: Layer already exists
+62bec68d7c31: Layer already exists
+d0008c891db4: Layer already exists
+46519e7231d2: Layer already exists
+0601614c3ac9: Pushed
+7955ab648dd4: Pushed
+11: digest: sha256:e54557bf57c760e93fac8574bbcbbc5d2483b51e87d3817d13cdb66085b4944b size: 856
++ docker push 127.0.0.1:5001/demo:latest
+The push refers to repository [127.0.0.1:5001/demo]
+7955ab648dd4: Already exists
+0601614c3ac9: Layer already exists
+62bec68d7c31: Layer already exists
+55afa1ecc21d: Layer already exists
+1223f016b4e4: Layer already exists
+d0008c891db4: Layer already exists
+390dc935348d: Layer already exists
+3cd534fe98c6: Layer already exists
+46f977ee452f: Layer already exists
+46519e7231d2: Layer already exists
+latest: digest: sha256:e54557bf57c760e93fac8574bbcbbc5d2483b51e87d3817d13cdb66085b4944b size: 856
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy container)
+[Pipeline] sh
++ docker rm -f demo
+demo
++ docker run -d --name demo --network docker-cicd-demo_cicd_net -p 8880:80 127.0.0.1:5001/demo:latest
+2c5e5dc6f45d9267ec5a5b8c9b9149022256abbc2040281a74692d1a579627d8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+[Gitea] do not publish assets due to source being no GiteaSCMSource
+Finished: SUCCESS
